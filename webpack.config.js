@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'eval',
   resolve: {
     alias: { 'react-dom': '@hot-loader/react-dom' },
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.css'],
   },
   entry: {
     app: ['./client'],
@@ -23,6 +23,15 @@ module.exports = {
             plugins: ['react-hot-loader/babel'],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        loader: 'webpack-ant-icon-loader',
+        enforce: 'pre',
+        include: [require.resolve('@ant-design/icons')],
       },
     ],
   },

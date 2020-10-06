@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.jsx';
-import Nav from './nav';
-import { BrowserRouter, Route } from 'react-router-dom';
+import Home from './Home.jsx';
+import Links from './Links';
+import AppLayout from './components/Applayout';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import 'antd/dist/antd.css';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Nav />
-    <Route exact path="/app">
-      <App />
-    </Route>
-  </BrowserRouter>,
+  <>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  </>,
   document.querySelector('#root')
 );

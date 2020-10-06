@@ -16,24 +16,24 @@ const AppLayout = ({ children }) => {
         }}
       >
         <Row>
-          <Col span={4}>
+          <Col span={6}>
             <MenuComponent />
           </Col>
-          <Col style={{ textAlign: 'center' }} span={16}>
+          <Col style={{ textAlign: 'center' }} span={12}>
             main Title
           </Col>
-          <Col style={{ textAlign: 'right' }} span={4}>
+          <Col style={{ textAlign: 'right' }} span={6}>
             <DropMenu />
           </Col>
         </Row>
       </header>
-      <main>
+      <main style={{ margin: '0 auto' }}>
         <Row>
-          <Col span={4}></Col>
-          <Col style={{ textAlign: 'center' }} span={16}>
+          <Col></Col>
+          <Col span={24} style={{ textAlign: 'center' }}>
             {children}
           </Col>
-          <Col span={4}></Col>
+          <Col></Col>
         </Row>
       </main>
     </>

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'antd';
 
 const UlWrapper = styled.ul`
   list-style: none;
@@ -45,22 +46,33 @@ const ImageWrapper = styled.img`
 `;
 
 const MainContents = () => {
-  const { contents } = useSelector((state) => state);
+  const { contents, hasMoreContents } = useSelector((state) => state.content);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({
-      type: 'ADD',
+      type: 'ADD_CONTENT',
+    });
+    dispatch({
+      type: 'MORE_CONTENT',
     });
   }, []);
+
   const handleOnClick = useCallback(() => {
     dispatch({
-      type: 'ADD',
+      type: 'MORE_CONTENT',
     });
   }, []);
+
   return (
     <>
-      <div style={{ marginTop: '20px' }}>
+      <div
+        style={{
+          marginTop: '20px',
+          minHeight: '400px',
+          height: '100%',
+        }}
+      >
         <UlWrapper>
           {contents.map((v, i) => (
             <li key={i}>
@@ -74,7 +86,22 @@ const MainContents = () => {
           ))}
         </UlWrapper>
       </div>
-      <button onClick={handleOnClick}>더보기</button>
+      {hasMoreContents && (
+        <Button
+          style={{
+            display: 'block',
+            textAlign: 'center',
+            width: '100px',
+            height: '45px',
+            fontSize: '18px',
+            margin: '0 auto',
+            marginBottom: '20px',
+          }}
+          onClick={handleOnClick}
+        >
+          더보기
+        </Button>
+      )}
     </>
   );
 };

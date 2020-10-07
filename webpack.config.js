@@ -9,7 +9,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.css'],
   },
   entry: {
-    app: ['./client'],
+    app: ['./App'],
   },
   module: {
     rules: [

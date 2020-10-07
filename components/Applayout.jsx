@@ -30,9 +30,7 @@ const AppLayout = ({ children }) => {
       <main style={{ margin: '0 auto' }}>
         <Row>
           <Col></Col>
-          <Col span={24} style={{ textAlign: 'center' }}>
-            {children}
-          </Col>
+          <Col span={24}>{children}</Col>
           <Col></Col>
         </Row>
       </main>

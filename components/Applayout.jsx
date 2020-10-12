@@ -2,36 +2,43 @@ import React from 'react';
 import { Col, Row } from 'antd';
 import MenuComponent from './MenuComponent';
 import DropMenu from './DropMenu';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+const HeaderWrapper = styled.header`
+  font-size: 25px;
+  height: 5vh;
+  margin-left: 30px;
+  margin-right: 30px;
+  padding-top: 10px;
+  @media screen and (max-width: 1180px) {
+    margin: 0px;
+  }
+`;
 
 const AppLayout = ({ children }) => {
   return (
     <>
-      <header
-        style={{
-          fontSize: '25px',
-          height: '5vh',
-          marginLeft: '30px',
-          marginRight: '30px',
-          paddingTop: '10px',
-        }}
-      >
-        <Row>
-          <Col span={6}>
+      <HeaderWrapper>
+        <Row style={{ position: 'static' }}>
+          <Col xs={3}>
             <MenuComponent />
           </Col>
-          <Col style={{ textAlign: 'center' }} span={12}>
-            main Title
+          <Col xs={18} style={{ textAlign: 'center' }}>
+            <Link to="/" style={{ color: 'black' }}>
+              그림 블로그
+            </Link>
           </Col>
-          <Col style={{ textAlign: 'right' }} span={6}>
+          <Col xs={3} style={{ textAlign: 'right' }}>
             <DropMenu />
           </Col>
         </Row>
-      </header>
+      </HeaderWrapper>
       <main style={{ margin: '0 auto' }}>
         <Row>
-          <Col></Col>
-          <Col span={24}>{children}</Col>
-          <Col></Col>
+          <Col style={{ position: 'static' }} xs={3}></Col>
+          <Col xs={18}>{children}</Col>
+          <Col xs={3}></Col>
         </Row>
       </main>
     </>

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'antd';
+import { Link } from 'react-router-dom';
 
 const UlWrapper = styled.ul`
   list-style: none;
@@ -77,10 +78,10 @@ const MainContents = () => {
           {contents.map((v, i) => (
             <li key={i}>
               <div>
-                <a href={v.href}>
+                <Link to={`/view/${v.id}`}>
                   <ImageWrapper src={v.imageSrc} />
                   <span className="title">{v.title}</span>
-                </a>
+                </Link>
               </div>
             </li>
           ))}

@@ -26,7 +26,11 @@ const MenuComponent = () => {
       </Button>
       {menu && (
         <Menu
-          style={{ marginTop: '20px', textAlign: 'left' }}
+          style={{
+            marginTop: '20px',
+            textAlign: 'left',
+            border: 'none',
+          }}
           onClick={handleOnMenuClick}
           mode="inline"
         >

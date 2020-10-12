@@ -21,6 +21,13 @@ const dummy = (number) => {
 
 const dummyContents = [];
 
+const addContent = (data) => ({
+  id: shortId.generate(),
+  title: data.title,
+  imageSrc: faker.image.image(),
+  href: `http://localhost:8080/#/${data.title}`,
+});
+
 const content = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_CONTENT':

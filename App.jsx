@@ -1,22 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import Home from './Home.jsx';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Write from './pages/Write';
+import View from './pages/View';
+import Login from './pages/Login';
 import configureStore from './store/configureStore';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch, HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.css';
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/write" component={Write} />
+        <Route path="/view/:data" component={View} />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>,
   document.querySelector('#root')
 );

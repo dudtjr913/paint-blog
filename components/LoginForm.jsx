@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
 const MainWrapper = styled.main`
   display: flex;
@@ -34,6 +36,7 @@ const LoginForm = () => {
   const [checked, setChecked] = useState(false);
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const handleOnId = useCallback((e) => {
     setId(e.target.value);
@@ -44,11 +47,14 @@ const LoginForm = () => {
   const handleOnRemember = useCallback((e) => {
     setChecked(e.target.checked);
   }, []);
-  const handleOnClick = useCallback((e) => {
-    console.log(e.target);
-  }, []);
   const handleOnSubmit = useCallback(() => {
-    console.log(id, password);
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: {
+        id,
+        password,
+      },
+    });
   }, [id, password]);
   return (
     <MainWrapper>
@@ -70,9 +76,7 @@ const LoginForm = () => {
           onChange={handleOnPassword}
           value={password}
         />
-        <LoginButton onClick={handleOnClick} type="submit">
-          로그인
-        </LoginButton>
+        <LoginButton type="submit">로그인</LoginButton>
         <Checkbox
           style={{ userSelect: 'none', marginBottom: '10px' }}
           name="remember"

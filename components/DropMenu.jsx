@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Dropdown, Button, Menu } from 'antd';
 import { ProfileOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { LOG_OUT_REQUEST } from '../reducers/user';
 
 const DropMenu = () => {
+  const { me } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleOnLogOut = useCallback(() => {
+    dispatch({
+      type: LOG_OUT_REQUEST,
+    });
+  }, []);
+
   const menu = (
     <Menu>
       <Menu.Item>
         <Link to="/">홈</Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/login">로그인</Link>
+        {me ? (
+          <span onClick={handleOnLogOut}>로그아웃</span>
+        ) : (
+          <Link to="/login">로그인</Link>
+        )}
       </Menu.Item>
       <Menu.Item>
         <Link to="/profile">프로필</Link>

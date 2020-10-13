@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Write from './pages/Write';
 import View from './pages/View';
+import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import configureStore from './store/configureStore';
 import { Route, Switch, HashRouter } from 'react-router-dom';
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="/profile" component={Profile} />
         <Route path="/write" component={Write} />
         <Route path="/view/:data" component={View} />
+        <Route path="/signup" component={SignUp} />
       </Switch>
     </HashRouter>
   </Provider>,

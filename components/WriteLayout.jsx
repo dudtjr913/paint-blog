@@ -1,5 +1,5 @@
-import React,{useCallback} from 'react';
-import { Col, Row, Button , Form} from 'antd';
+import React, { useCallback } from 'react';
+import { Col, Row, Button, Form } from 'antd';
 import {
   FileImageOutlined,
   VideoCameraOutlined,
@@ -14,6 +14,9 @@ import {
   LineHeightOutlined,
 } from '@ant-design/icons';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { ADD_CONTENT } from '../reducers/content';
 
 const ButtonWrapper = styled.button`
   background-color: white;
@@ -37,30 +40,42 @@ const UlWrapper = styled.ul`
 `;
 
 const HeaderWrapper = styled.header`
-padding : 5px 0px;
-min-height : 4vh;
-padding-bottom : 0px;
+  padding: 5px 0px;
+  min-height: 4vh;
+  padding-bottom: 0px;
 `;
 
 const FormWrapper = styled(Form)`
-  border-bottom : 1px solid lightgray;
-  display : flex;
-  align-items : center;
-  justify-content : space-between;
-  padding : 0px 15px;
-  padding-bottom : 5px
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 15px;
+  padding-bottom: 5px;
 `;
 
-const WriteLayout = ({ children, title, mainText }) => {
+const WriteLayout = ({ children, title, mainText, history }) => {
+  const dispatch = useDispatch();
   const handleOnSave = useCallback(() => {
-    console.log(title, mainText)
-  }, [title, mainText])
+    dispatch({
+      type: ADD_CONTENT,
+      data: {
+        title,
+        text: mainText,
+      },
+    });
+    history.push('/');
+  }, [title, mainText]);
   return (
     <>
       <HeaderWrapper>
         <FormWrapper onFinish={handleOnSave}>
-          <Button>홈</Button>
-          <Button style={{ marginRight: '10px' }} htmlType="submit">저장</Button>
+          <Button>
+            <Link to="/">홈</Link>
+          </Button>
+          <Button style={{ marginRight: '10px' }} htmlType="submit">
+            저장
+          </Button>
         </FormWrapper>
         <UlWrapper>
           <li>
@@ -193,10 +208,18 @@ const WriteLayout = ({ children, title, mainText }) => {
           </li>
         </UlWrapper>
       </HeaderWrapper>
-      <main style={{ margin: '0 auto', backgroundColor:'whitesmoke'}}>
+      <main style={{ margin: '0 auto', backgroundColor: 'whitesmoke' }}>
         <Row>
           <Col span={6}></Col>
-          <Col span={12} style={{ backgroundColor:'white', minHeight:'calc(100vh - 140.88px)'}}>{children}</Col>
+          <Col
+            span={12}
+            style={{
+              backgroundColor: 'white',
+              minHeight: 'calc(100vh - 140.88px)',
+            }}
+          >
+            {children}
+          </Col>
           <Col span={6}></Col>
         </Row>
       </main>

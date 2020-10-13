@@ -1,5 +1,5 @@
-import React from 'react';
-import { Col, Row, Button } from 'antd';
+import React,{useCallback} from 'react';
+import { Col, Row, Button , Form} from 'antd';
 import {
   FileImageOutlined,
   VideoCameraOutlined,
@@ -36,23 +36,32 @@ const UlWrapper = styled.ul`
   border-bottom: 1px solid lightgray;
 `;
 
-const AppLayout = ({ children }) => {
+const HeaderWrapper = styled.header`
+padding : 5px 0px;
+min-height : 4vh;
+padding-bottom : 0px;
+`;
+
+const FormWrapper = styled(Form)`
+  border-bottom : 1px solid lightgray;
+  display : flex;
+  align-items : center;
+  justify-content : space-between;
+  padding : 0px 15px;
+  padding-bottom : 5px
+`;
+
+const WriteLayout = ({ children, title, mainText }) => {
+  const handleOnSave = useCallback(() => {
+    console.log(title, mainText)
+  }, [title, mainText])
   return (
     <>
-      <header style={{ padding: '5px 0px', minHeight: '4vh' }}>
-        <div
-          style={{
-            borderBottom: '1px solid lightgray',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0px 15px',
-            paddingBottom: '5px',
-          }}
-        >
+      <HeaderWrapper>
+        <FormWrapper onFinish={handleOnSave}>
           <Button>홈</Button>
-          <Button style={{ marginRight: '10px' }}>저장</Button>
-        </div>
+          <Button style={{ marginRight: '10px' }} htmlType="submit">저장</Button>
+        </FormWrapper>
         <UlWrapper>
           <li>
             <ButtonWrapper>
@@ -183,16 +192,16 @@ const AppLayout = ({ children }) => {
             </ButtonWrapper>
           </li>
         </UlWrapper>
-      </header>
-      <main style={{ margin: '0 auto' }}>
+      </HeaderWrapper>
+      <main style={{ margin: '0 auto', backgroundColor:'whitesmoke'}}>
         <Row>
-          <Col style={{ position: 'static' }} xs={3}></Col>
-          <Col xs={18}>{children}</Col>
-          <Col xs={3}></Col>
+          <Col span={6}></Col>
+          <Col span={12} style={{ backgroundColor:'white', minHeight:'calc(100vh - 140.88px)'}}>{children}</Col>
+          <Col span={6}></Col>
         </Row>
       </main>
     </>
   );
 };
 
-export default AppLayout;
+export default WriteLayout;

@@ -1,13 +1,14 @@
 import React from 'react';
 import Applayout from '../components/Applayout';
 import { useSelector } from 'react-redux';
+import ProfileForm from '../components/ProfileForm';
 
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
   return (
     <Applayout>
       {me ? (
-        <div>profile</div>
+        <ProfileForm />
       ) : (
         <div
           style={{

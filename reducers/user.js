@@ -1,5 +1,5 @@
 const initialState = {
-  me: null,
+  me: true,
 };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';

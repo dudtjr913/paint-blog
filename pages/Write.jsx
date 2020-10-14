@@ -1,10 +1,13 @@
 import React, { useState, useCallback } from 'react';
+import Applayout from '../components/Applayout';
 import WriteLayout from '../components/WriteLayout';
 import { Input, Form } from 'antd';
+import { useSelector } from 'react-redux';
 
 const Write = ({ history }) => {
   const [title, setTitle] = useState(null);
   const [mainText, setMainText] = useState(null);
+  const { me } = useSelector((state) => state.user);
 
   const handleOnChangeTitle = useCallback((e) => {
     setTitle(e.target.value);
@@ -14,7 +17,7 @@ const Write = ({ history }) => {
     setMainText(e.target.value);
   }, []);
 
-  return (
+  return me ? (
     <WriteLayout history={history} title={title} mainText={mainText}>
       <Form style={{ width: '80%', margin: '0px auto' }}>
         <Input
@@ -38,6 +41,23 @@ const Write = ({ history }) => {
         />
       </Form>
     </WriteLayout>
+  ) : (
+    <Applayout>
+      {me ? (
+        <div>profile</div>
+      ) : (
+        <div
+          style={{
+            minHeight: 'calc(100vh - 48.44px)',
+            textAlign: 'center',
+            lineHeight: 'calc(100vh - 48.44px)',
+            fontSize: '30px',
+          }}
+        >
+          로그인을 해주세요.
+        </div>
+      )}
+    </Applayout>
   );
 };
 

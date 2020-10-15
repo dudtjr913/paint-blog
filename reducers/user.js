@@ -1,5 +1,6 @@
 const initialState = {
   me: true,
+  changeInf: null,
 };
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
@@ -17,6 +18,7 @@ const user = (state = initialState, action) => {
         ...state,
         me: null,
       };
+
     default:
       return state;
   }

@@ -16,7 +16,7 @@ import {
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ADD_CONTENT } from '../reducers/content';
+import { ADD_CONTENT_REQUEST } from '../reducers/content';
 
 const ButtonWrapper = styled.button`
   background-color: white;
@@ -58,7 +58,7 @@ const WriteLayout = ({ children, title, mainText, history }) => {
   const dispatch = useDispatch();
   const handleOnSave = useCallback(() => {
     dispatch({
-      type: ADD_CONTENT,
+      type: ADD_CONTENT_REQUEST,
       data: {
         title,
         text: mainText,

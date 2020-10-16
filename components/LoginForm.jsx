@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Form, Input, Checkbox } from 'antd';
+import { Form, Input, Checkbox, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LOG_IN_REQUEST } from '../reducers/user';
 
 const MainWrapper = styled.main`
@@ -16,15 +16,14 @@ const MainWrapper = styled.main`
   padding: 30px 0px;
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled(Button)`
   width: 100%;
   height: 35px;
   margin: 10px 0px;
-  background-color: lightgray;
-  cursor: pointer;
-  border: none;
   :hover {
+    background-color: lightgray;
     border: 1px solid black;
+    color: black;
   }
   :focus {
     outline: none;
@@ -37,6 +36,7 @@ const LoginForm = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const { logInLoading } = useSelector((state) => state.user);
 
   const handleOnId = useCallback((e) => {
     setId(e.target.value);
@@ -76,7 +76,9 @@ const LoginForm = () => {
           onChange={handleOnPassword}
           value={password}
         />
-        <LoginButton type="submit">로그인</LoginButton>
+        <LoginButton loading={logInLoading} htmlType="submit">
+          로그인
+        </LoginButton>
         <Checkbox
           style={{ userSelect: 'none', marginBottom: '10px' }}
           name="remember"

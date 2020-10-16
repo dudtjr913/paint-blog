@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'antd';
 import { Link } from 'react-router-dom';
-import { LOAD_CONTENTS, MORE_CONTENTS } from '../reducers/content';
+import { MORE_CONTENTS_REQUEST } from '../reducers/content';
 
 const UlWrapper = styled.ul`
   list-style: none;
@@ -53,16 +53,13 @@ const MainContents = () => {
 
   useEffect(() => {
     dispatch({
-      type: LOAD_CONTENTS,
-    });
-    dispatch({
-      type: MORE_CONTENTS,
+      type: MORE_CONTENTS_REQUEST,
     });
   }, []);
 
   const handleOnClick = useCallback(() => {
     dispatch({
-      type: MORE_CONTENTS,
+      type: MORE_CONTENTS_REQUEST,
     });
   }, []);
 

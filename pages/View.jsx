@@ -1,25 +1,25 @@
 import React, { useEffect } from 'react';
 import Applayout from '../components/Applayout';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_CONTENT } from '../reducers/content';
+import { LOAD_CONTENT_REQUEST } from '../reducers/content';
 
 const View = ({ match }) => {
   const dispatch = useDispatch();
-  const { loadContent } = useSelector((state) => state.content);
+  const { loadContentDone } = useSelector((state) => state.content);
   useEffect(() => {
     dispatch({
-      type: LOAD_CONTENT,
+      type: LOAD_CONTENT_REQUEST,
       data: match.params.data,
     });
   }, []);
   return (
     <Applayout>
-      {loadContent && (
+      {loadContentDone && (
         <section style={{ textAlign: 'center', marginTop: '50px' }}>
-          <h1>{loadContent.title}</h1>
+          <h1>{loadContentDone.title}</h1>
           <div>
-            <img src={loadContent.imageSrc} />
-            <div>{loadContent.text}</div>
+            <img src={loadContentDone.imageSrc} />
+            <div>{loadContentDone.text}</div>
           </div>
         </section>
       )}

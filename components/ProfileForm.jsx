@@ -3,6 +3,14 @@ import { Card, Avatar, Button, Row, Col, Input, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import {
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_EMAIL_REQUEST,
+  CHANGE_PHONE_REQUEST,
+  CLICK_CHANGE_EMAIL,
+  CLICK_CHANGE_NICKNAME,
+  CLICK_CHANGE_PHONE,
+} from '../reducers/user';
 
 const RowWrapper = styled(Row)`
   min-height: calc(100vh - 48.44px);
@@ -44,11 +52,17 @@ const ProfileForm = () => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [nicknameChange, setNicknameChange] = useState(false);
-  const [emailChange, setEmailChange] = useState(false);
-  const [phoneChange, setPhoneChange] = useState(false);
   const { contents } = useSelector((state) => state.content);
-  const { me } = useSelector((state) => state.user);
+  const {
+    me,
+    changeNicknameLoading,
+    changeEmailLoading,
+    changePhoneLoading,
+    clickChangeNickname,
+    clickChangeEmail,
+    clickChangePhone,
+  } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const changeNickname = useCallback((e) => {
     setNickname(e.target.value);
@@ -63,29 +77,82 @@ const ProfileForm = () => {
   }, []);
 
   const handleOnChange = useCallback((e) => {
-    console.log(e.target.className);
-    if (e.target.className === 'ant-btn nickname' || 'nickname') {
+    if (
+      e.target.className === 'ant-btn nickname' ||
+      e.target.className === 'nickname'
+    ) {
       if (e.target.textContent === '취소') {
         setNickname('');
-        return setNicknameChange(false);
+        dispatch({
+          type: CLICK_CHANGE_NICKNAME,
+          data: false,
+        });
+      } else {
+        dispatch({
+          type: CLICK_CHANGE_NICKNAME,
+          data: true,
+        });
       }
-      return setNicknameChange(true);
     }
-    if (e.target.className === 'ant-btn email' || 'email') {
+    if (
+      e.target.className === 'ant-btn email' ||
+      e.target.className === 'email'
+    ) {
       if (e.target.textContent === '취소') {
         setEmail('');
-        return setEmailChange(false);
+        dispatch({
+          type: CLICK_CHANGE_EMAIL,
+          data: false,
+        });
+      } else {
+        dispatch({
+          type: CLICK_CHANGE_EMAIL,
+          data: true,
+        });
       }
-      return setEmailChange(true);
     }
-    if (e.target.className === 'ant-btn phone' || 'phone') {
+    if (
+      e.target.className === 'ant-btn phone' ||
+      e.target.className === 'phone'
+    ) {
       if (e.target.textContent === '취소') {
         setPhone('');
-        return setPhoneChange(false);
+        dispatch({
+          type: CLICK_CHANGE_PHONE,
+          data: false,
+        });
+      } else {
+        dispatch({
+          type: CLICK_CHANGE_PHONE,
+          data: true,
+        });
       }
-      return setPhoneChange(true);
     }
   }, []);
+
+  const changeNicknameSubmit = useCallback(() => {
+    dispatch({
+      type: CHANGE_NICKNAME_REQUEST,
+      data: nickname,
+    });
+    setNickname('');
+  }, [nickname]);
+
+  const changeEmailSubmit = useCallback(() => {
+    dispatch({
+      type: CHANGE_EMAIL_REQUEST,
+      data: email,
+    });
+    setEmail('');
+  }, [email]);
+
+  const changePhoneSubmit = useCallback(() => {
+    dispatch({
+      type: CHANGE_PHONE_REQUEST,
+      data: phone,
+    });
+    setPhone('');
+  }, [phone]);
 
   return (
     <section>
@@ -105,31 +172,35 @@ const ProfileForm = () => {
                   <span>{contents.length}</span>
                   <div></div>
                   <DTWrapper style={{ width: '40%' }}>닉네임</DTWrapper>
-                  {nicknameChange ? (
-                    <Form>
-                      <Input
-                        placeholder="변경할 닉네임"
-                        value={nickname}
-                        onChange={changeNickname}
-                      />
-                      <Button
-                        className="nickname"
-                        style={{ float: 'right' }}
-                        onClick={handleOnChange}
-                      >
-                        <span className="nickname">변경</span>
-                      </Button>
-                      <Button
-                        className="nickname"
-                        style={{ float: 'right' }}
-                        onClick={handleOnChange}
-                      >
-                        <span className="nickname">취소</span>
-                      </Button>
-                    </Form>
+                  {clickChangeNickname ? (
+                    <>
+                      <span>{me.nickname}</span>
+                      <Form onFinish={changeNicknameSubmit}>
+                        <Input
+                          placeholder="변경할 닉네임"
+                          value={nickname}
+                          onChange={changeNickname}
+                        />
+                        <Button
+                          className="nickname"
+                          style={{ float: 'right' }}
+                          htmlType="submit"
+                          loading={changeNicknameLoading}
+                        >
+                          변경
+                        </Button>
+                        <Button
+                          className="nickname"
+                          style={{ float: 'right' }}
+                          onClick={handleOnChange}
+                        >
+                          <span className="nickname">취소</span>
+                        </Button>
+                      </Form>
+                    </>
                   ) : (
                     <>
-                      <span>히밤</span>
+                      <span>{me.nickname}</span>
                       <div>
                         <Button
                           className="nickname"
@@ -150,75 +221,86 @@ const ProfileForm = () => {
           <CardRight title="내정보" style={{ fontSize: '16px' }}>
             <div style={{ textAlign: 'left' }}>
               <DTWrapper>이메일</DTWrapper>
-              {emailChange ? (
-                <Form>
-                  <Input
-                    placeholder="변경할 이메일"
-                    value={email}
-                    onChange={changeEmail}
-                  />
-                  <Button
-                    className="email"
-                    style={{ float: 'right' }}
-                    onClick={handleOnChange}
-                  >
-                    변경
-                  </Button>
-                  <Button
-                    className="email"
-                    style={{ float: 'right' }}
-                    onClick={handleOnChange}
-                  >
-                    취소
-                  </Button>
-                </Form>
+              {clickChangeEmail ? (
+                <>
+                  <span>{me.email}</span>
+                  <Form onFinish={changeEmailSubmit}>
+                    <Input
+                      placeholder="변경할 이메일"
+                      value={email}
+                      onChange={changeEmail}
+                      type="email"
+                      style={{ marginLeft: '30%', width: '70%' }}
+                    />
+                    <Button
+                      className="email"
+                      style={{ float: 'right' }}
+                      htmlType="submit"
+                      loading={changeEmailLoading}
+                    >
+                      변경
+                    </Button>
+                    <Button
+                      className="email"
+                      style={{ float: 'right' }}
+                      onClick={handleOnChange}
+                    >
+                      <span className="email">취소</span>
+                    </Button>
+                  </Form>
+                </>
               ) : (
                 <>
-                  <span>dudtjr913@naver.com</span>
+                  <span>{me.email}</span>
                   <div>
                     <Button
                       className="email"
                       style={{ marginLeft: '30%' }}
                       onClick={handleOnChange}
                     >
-                      수정
+                      <span className="email">수정</span>
                     </Button>
                   </div>
                 </>
               )}
               <DTWrapper>휴대전화</DTWrapper>
-              {phoneChange ? (
-                <Form>
-                  <Input
-                    placeholder="변경할 휴대전화"
-                    value={phone}
-                    onChange={changePhone}
-                  />
-                  <Button
-                    className="phone"
-                    style={{ float: 'right' }}
-                    onClick={handleOnChange}
-                  >
-                    변경
-                  </Button>
-                  <Button
-                    className="phone"
-                    style={{ float: 'right' }}
-                    onClick={handleOnChange}
-                  >
-                    취소
-                  </Button>
-                </Form>
+              {clickChangePhone ? (
+                <>
+                  <span>{me.phone}</span>
+                  <Form onFinish={changePhoneSubmit}>
+                    <Input
+                      placeholder="변경할 휴대전화"
+                      value={phone}
+                      onChange={changePhone}
+                      style={{ marginLeft: '30%', width: '70%' }}
+                    />
+                    <Button
+                      className="phone"
+                      style={{ float: 'right' }}
+                      htmlType="submit"
+                      loading={changePhoneLoading}
+                    >
+                      변경
+                    </Button>
+                    <Button
+                      className="phone"
+                      style={{ float: 'right' }}
+                      onClick={handleOnChange}
+                    >
+                      <span className="phone">취소</span>
+                    </Button>
+                  </Form>
+                </>
               ) : (
                 <>
-                  <span>010-0000-0000</span>
+                  <span>{me.phone}</span>
                   <div>
                     <Button
                       className="phone"
                       style={{ marginLeft: '30%' }}
                       onClick={handleOnChange}
                     >
-                      수정
+                      <span className="phone">수정</span>
                     </Button>
                   </div>
                 </>

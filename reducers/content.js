@@ -3,16 +3,31 @@ import shortId from 'shortid';
 
 const initialState = {
   contents: [],
-  loadContent: null,
+  addContentLoading: false,
+  addContentDone: false,
+  addContentError: false,
+  loadContentLoading: false,
+  loadContentDone: null,
+  loadContentError: false,
+  moreContentsLoading: false,
+  moreContentsDone: false,
+  moreContentsError: false,
   hasMoreContents: true,
 };
 
-export const ADD_CONTENT = 'ADD_CONTENT';
-export const LOAD_CONTENTS = 'LOAD_CONTENTS';
-export const MORE_CONTENTS = 'MORE_CONTENTS';
-export const LOAD_CONTENT = 'LOAD_CONTENT';
+export const ADD_CONTENT_REQUEST = 'ADD_CONTENT_REQUEST';
+export const ADD_CONTENT_SUCCESS = 'ADD_CONTENT_SUCCESS';
+export const ADD_CONTENT_FAILURE = 'ADD_CONTENT_FAILURE';
 
-const dummy = (number) => {
+export const LOAD_CONTENT_REQUEST = 'LOAD_CONTENT_REQUEST';
+export const LOAD_CONTENT_SUCCESS = 'LOAD_CONTENT_SUCCESS';
+export const LOAD_CONTENT_FAILURE = 'LOAD_CONTENT_FAILURE';
+
+export const MORE_CONTENTS_REQUEST = 'MORE_CONTENTS_REQUEST';
+export const MORE_CONTENTS_SUCCESS = 'MORE_CONTENTS_SUCCESS';
+export const MORE_CONTENTS_FAILURE = 'MORE_CONTENTS_FAILURE';
+
+export const dummy = (number) => {
   const dummyData = [];
   for (let i = 1; i <= number; i++) {
     dummyData.push({
@@ -25,8 +40,6 @@ const dummy = (number) => {
   return dummyData;
 };
 
-const dummyContents = [];
-
 const addContent = (data) => ({
   id: shortId.generate(),
   title: data.title,
@@ -36,31 +49,76 @@ const addContent = (data) => ({
 
 const content = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_CONTENTS:
-      dummyContents.push(...dummy(50));
+    case ADD_CONTENT_REQUEST:
       return {
         ...state,
+        addContentLoading: true,
+        addContentDone: false,
+        addContentError: false,
       };
-    case MORE_CONTENTS:
-      const mainContents = [];
-      mainContents.push(...dummyContents.splice(0, 8));
-      const hasContent = dummyContents.length > 0;
+    case ADD_CONTENT_SUCCESS:
       return {
         ...state,
-        contents: [...state.contents, ...mainContents],
-        hasMoreContents: hasContent,
-      };
-    case ADD_CONTENT:
-      return {
-        ...state,
+        addContentLoading: false,
+        addContentDone: true,
+        addContentError: false,
         contents: [addContent(action.data), ...state.contents],
       };
-    case LOAD_CONTENT:
+    case ADD_CONTENT_FAILURE:
+      return {
+        ...state,
+        addContentLoading: false,
+        addContentDone: false,
+        addContentError: action.error,
+      };
+    case MORE_CONTENTS_REQUEST:
+      return {
+        ...state,
+        moreContentsLoading: true,
+        moreContentsDone: false,
+        moreContentsError: false,
+        loadContentDone: null,
+      };
+    case MORE_CONTENTS_SUCCESS:
+      return {
+        ...state,
+        moreContentsLoading: true,
+        moreContentsDone: false,
+        moreContentsError: false,
+        contents: [...state.contents, ...action.data],
+        hasMoreContents: state.contents.length < 42,
+      };
+    case MORE_CONTENTS_FAILURE:
+      return {
+        ...state,
+        moreContentsLoading: true,
+        moreContentsDone: false,
+        moreContentsError: false,
+      };
+
+    case LOAD_CONTENT_REQUEST:
+      return {
+        ...state,
+        loadContentLoading: true,
+        loadContentDone: false,
+        loadContentError: false,
+      };
+    case LOAD_CONTENT_SUCCESS:
       const load = state.contents.find((v) => v.id === action.data);
       return {
         ...state,
-        loadContent: load,
+        loadContentLoading: true,
+        loadContentDone: load,
+        loadContentError: false,
       };
+    case LOAD_CONTENT_FAILURE:
+      return {
+        ...state,
+        loadContentLoading: true,
+        loadContentDone: false,
+        loadContentError: false,
+      };
+
     default:
       return state;
   }

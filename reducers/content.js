@@ -3,6 +3,44 @@ import shortId from 'shortid';
 
 const initialState = {
   contents: [],
+  menuLists: [
+    {
+      title: 'items1',
+      key: 'items1',
+      children: [
+        {
+          title: 1,
+          key: 1,
+        },
+        {
+          title: 2,
+          key: 2,
+        },
+        {
+          title: 3,
+          key: 3,
+        },
+      ],
+    },
+    {
+      title: 'items2',
+      key: 'items2',
+      children: [
+        {
+          title: 4,
+          key: 4,
+        },
+        {
+          title: 5,
+          key: 5,
+        },
+        {
+          title: 6,
+          key: 6,
+        },
+      ],
+    },
+  ],
   addContentLoading: false,
   addContentDone: false,
   addContentError: false,

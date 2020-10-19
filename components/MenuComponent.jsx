@@ -1,15 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { Menu, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const MenuComponent = () => {
   const [menu, setMenu] = useState(false);
+  const { menuLists } = useSelector((state) => state.content);
   const handleOnClick = useCallback(() => {
     setMenu((prev) => !prev);
   }, []);
   const handleOnMenuClick = useCallback((e) => {
     console.log('clicked', e);
   }, []);
+
   return (
     <>
       <Button
@@ -34,23 +38,18 @@ const MenuComponent = () => {
           onClick={handleOnMenuClick}
           mode="inline"
         >
-          <Menu.ItemGroup key="g1" title="Items1">
-            <Menu.Item key="1">1</Menu.Item>
-            <Menu.Item key="2">2</Menu.Item>
-            <Menu.Item key="3">3</Menu.Item>
-          </Menu.ItemGroup>
-          <Menu.ItemGroup key="g2" title="Items2">
-            <Menu.Item key="4">4</Menu.Item>
-            <Menu.Item key="5">5</Menu.Item>
-            <Menu.Item key="6">6</Menu.Item>
-          </Menu.ItemGroup>
-          <Menu.ItemGroup key="g3" title="Items3">
-            <Menu.Item key="7">7</Menu.Item>
-            <Menu.Item key="8">8</Menu.Item>
-            <Menu.Item key="9">9</Menu.Item>
-          </Menu.ItemGroup>
+          {menuLists.map((v) => (
+            <Menu.ItemGroup key={v.key} title={v.title}>
+              {v.children.map((v) => (
+                <Menu.Item key={v.key}>{v.title}</Menu.Item>
+              ))}
+            </Menu.ItemGroup>
+          ))}
         </Menu>
       )}
+      <Button>
+        <Link to="/changemenu">edit</Link>
+      </Button>
     </>
   );
 };

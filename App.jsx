@@ -7,7 +7,7 @@ import Write from './pages/Write';
 import View from './pages/View';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
-import ChangeMenu from './pages/ChangeMenu';
+import EditMenu from './pages/EditMenu';
 import configureStore from './store/configureStore';
 import { Route, Switch, HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.css';
@@ -24,7 +24,7 @@ ReactDOM.render(
         <Route path="/write" component={Write} />
         <Route path="/view/:data" component={View} />
         <Route path="/signup" component={SignUp} />
-        <Route path="/changemenu" component={ChangeMenu} />
+        <Route path="/editmenu" component={EditMenu} />
       </Switch>
     </HashRouter>
   </Provider>,

@@ -9,16 +9,16 @@ const initialState = {
       key: 'items1',
       children: [
         {
-          title: 1,
-          key: 1,
+          title: '1',
+          key: '1',
         },
         {
-          title: 2,
-          key: 2,
+          title: '2',
+          key: '2',
         },
         {
-          title: 3,
-          key: 3,
+          title: '3',
+          key: '3',
         },
       ],
     },
@@ -27,20 +27,23 @@ const initialState = {
       key: 'items2',
       children: [
         {
-          title: 4,
-          key: 4,
+          title: '4',
+          key: '4',
         },
         {
-          title: 5,
-          key: 5,
+          title: '5',
+          key: '5',
         },
         {
-          title: 6,
-          key: 6,
+          title: '6',
+          key: '6',
         },
       ],
     },
   ],
+  editCategoryLoading: false,
+  editCategoryDone: false,
+  editCategoryError: false,
   addContentLoading: false,
   addContentDone: false,
   addContentError: false,
@@ -65,6 +68,10 @@ export const MORE_CONTENTS_REQUEST = 'MORE_CONTENTS_REQUEST';
 export const MORE_CONTENTS_SUCCESS = 'MORE_CONTENTS_SUCCESS';
 export const MORE_CONTENTS_FAILURE = 'MORE_CONTENTS_FAILURE';
 
+export const EDIT_CATEGORY_REQUEST = 'EDIT_CATEGORY_REQUEST';
+export const EDIT_CATEGORY_SUCCESS = 'EDIT_CATEGORY_SUCCESS';
+export const EDIT_CATEGORY_FAILURE = 'EDIT_CATEGORY_FAILURE';
+
 export const dummy = (number) => {
   const dummyData = [];
   for (let i = 1; i <= number; i++) {
@@ -87,6 +94,41 @@ const addContent = (data) => ({
 
 const content = (state = initialState, action) => {
   switch (action.type) {
+    case EDIT_CATEGORY_REQUEST:
+      return {
+        ...state,
+        editCategoryLoading: true,
+        editCategoryDone: false,
+        editCategoryError: false,
+      };
+    case EDIT_CATEGORY_SUCCESS:
+      const copy = JSON.parse(JSON.stringify(state.menuLists)); // 깊은 복사
+      let category = action.data.select.children
+        ? copy.find((v) => v.title === action.data.select.title)
+        : copy.findIndex((v) =>
+            v.children.find((v) => v.title === action.data.select.title)
+          );
+      category =
+        typeof category === 'number' // 자식이 있으면 부모 인덱스를 통해 자식 값을 가져옴
+          ? copy[category].children.find(
+              (v) => v.title === action.data.select.title
+            )
+          : category;
+      category.title = action.data.value;
+      return {
+        ...state,
+        editCategoryLoading: false,
+        editCategoryDone: true,
+        editCategoryError: false,
+        menuLists: [...copy],
+      };
+    case EDIT_CATEGORY_FAILURE:
+      return {
+        ...state,
+        editCategoryLoading: false,
+        editCategoryDone: false,
+        editCategoryError: action.error,
+      };
     case ADD_CONTENT_REQUEST:
       return {
         ...state,

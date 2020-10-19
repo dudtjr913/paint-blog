@@ -48,7 +48,7 @@ const MenuComponent = () => {
         </Menu>
       )}
       <Button>
-        <Link to="/changemenu">edit</Link>
+        <Link to="/editmenu">edit</Link>
       </Button>
     </>
   );

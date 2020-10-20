@@ -35,7 +35,7 @@ const CardLeft = styled(Card)`
 
 const CardRight = styled(Card)`
   @media screen and (min-width: 1000px) {
-    width: 465px;
+    max-width: 465px;
     height: 250px;
   }
   width: 100%;

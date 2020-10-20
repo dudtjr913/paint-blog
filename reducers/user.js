@@ -1,4 +1,5 @@
 import faker from 'faker';
+import produce from 'immer';
 
 const initialState = {
   me: null,
@@ -47,159 +48,116 @@ export const CHANGE_PHONE_REQUEST = 'CHANGE_PHONE_REQUEST';
 export const CHANGE_PHONE_SUCCESS = 'CHANGE_PHONE_SUCCESS';
 export const CHANGE_PHONE_FAILURE = 'CHANGE_PHONE_FAILURE';
 
-const user = (state = initialState, action) => {
-  switch (action.type) {
-    case CLICK_CHANGE_NICKNAME:
-      return {
-        ...state,
-        clickChangeNickname: action.data,
-      };
-    case CLICK_CHANGE_EMAIL:
-      return {
-        ...state,
-        clickChangeEmail: action.data,
-      };
-    case CLICK_CHANGE_PHONE:
-      return {
-        ...state,
-        clickChangePhone: action.data,
-      };
-    case LOG_IN_REQUEST:
-      return {
-        ...state,
-        logInLoading: true,
-        logInDone: false,
-        logInError: false,
-      };
-    case LOG_IN_SUCCESS:
-      return {
-        ...state,
-        logInLoading: false,
-        logInDone: true,
-        LogInError: false,
-        me: {
+const user = (state = initialState, action) =>
+  produce(state, (draft) => {
+    switch (action.type) {
+      case CLICK_CHANGE_NICKNAME:
+        draft.clickChangeNickname = action.data;
+        break;
+      case CLICK_CHANGE_EMAIL:
+        draft.clickChangeEmail = action.data;
+        break;
+      case CLICK_CHANGE_PHONE:
+        draft.clickChangePhone = action.data;
+        break;
+
+      case LOG_IN_REQUEST:
+        draft.logInLoading = true;
+        draft.logInDone = false;
+        draft.logInError = false;
+        break;
+      case LOG_IN_SUCCESS:
+        draft.logInLoading = false;
+        draft.logInDone = true;
+        draft.LogInError = false;
+        draft.me = {
           id: action.data.id,
           nickname: faker.name.firstName(),
           password: action.data.password,
           email: faker.internet.email(),
           phone: faker.phone.phoneNumber(),
-        },
-      };
-    case LOG_IN_FAILURE:
-      return {
-        ...state,
-        logInLoading: false,
-        logInDone: false,
-        logInError: action.error,
-      };
+        };
+        break;
+      case LOG_IN_FAILURE:
+        draft.logInLoading = false;
+        draft.logInDone = false;
+        draft.logInError = action.error;
+        break;
 
-    case LOG_OUT_REQUEST:
-      return {
-        ...state,
-        logOutLoading: true,
-        logOutDone: false,
-        logOutError: false,
-      };
-    case LOG_OUT_SUCCESS:
-      return {
-        ...state,
-        logOutLoading: false,
-        logOutDone: true,
-        logOutError: false,
-        me: null,
-      };
-    case LOG_OUT_FAILURE:
-      return {
-        ...state,
-        logOutLoading: false,
-        logOutDone: false,
-        logOutError: action.error,
-      };
+      case LOG_OUT_REQUEST:
+        draft.logOutLoading = true;
+        draft.logOutDone = false;
+        draft.logOutError = false;
+        break;
+      case LOG_OUT_SUCCESS:
+        draft.logOutLoading = false;
+        draft.logOutDone = true;
+        draft.logOutError = false;
+        draft.me = null;
+        break;
+      case LOG_OUT_FAILURE:
+        draft.logOutLoading = false;
+        draft.logOutDone = false;
+        draft.logOutError = action.error;
+        break;
 
-    case CHANGE_NICKNAME_REQUEST:
-      return {
-        ...state,
-        changeNicknameLoading: true,
-        changeNicknameDone: false,
-        changeNicknameError: false,
-      };
-    case CHANGE_NICKNAME_SUCCESS:
-      return {
-        ...state,
-        changeNicknameLoading: false,
-        changeNicknameDone: true,
-        changeNicknameError: false,
-        clickChangeNickname: false,
-        me: {
-          ...state.me,
-          nickname: action.data,
-        },
-      };
-    case CHANGE_NICKNAME_FAILURE:
-      return {
-        ...state,
-        changeNicknameLoading: false,
-        changeNicknameDone: false,
-        changeNicknameError: action.error,
-      };
+      case CHANGE_NICKNAME_REQUEST:
+        draft.changeNicknameLoading = true;
+        draft.changeNicknameDone = false;
+        draft.changeNicknameError = false;
+        break;
+      case CHANGE_NICKNAME_SUCCESS:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = true;
+        draft.changeNicknameError = false;
+        draft.clickChangeNickname = false;
+        draft.me.nickname = action.data;
+        break;
+      case CHANGE_NICKNAME_FAILURE:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = false;
+        draft.changeNicknameError = action.error;
+        break;
 
-    case CHANGE_EMAIL_REQUEST:
-      return {
-        ...state,
-        changeEmailLoading: true,
-        changeEmailDone: false,
-        changeEmailError: false,
-      };
-    case CHANGE_EMAIL_SUCCESS:
-      return {
-        ...state,
-        changeEmailLoading: false,
-        changeEmailDone: true,
-        changeEmailError: false,
-        clickChangeEmail: false,
-        me: {
-          ...state.me,
-          email: action.data,
-        },
-      };
-    case CHANGE_EMAIL_FAILURE:
-      return {
-        ...state,
-        changeEmailLoading: false,
-        changeEmailDone: false,
-        changeEmailError: action.error,
-      };
+      case CHANGE_EMAIL_REQUEST:
+        draft.changeEmailLoading = true;
+        draft.changeEmailDone = false;
+        draft.changeEmailError = false;
+        break;
+      case CHANGE_EMAIL_SUCCESS:
+        draft.changeEmailLoading = false;
+        draft.changeEmailDone = true;
+        draft.changeEmailError = false;
+        draft.clickChangeEmail = false;
+        draft.me.email = action.data;
+        break;
+      case CHANGE_EMAIL_FAILURE:
+        draft.changeEmailLoading = false;
+        draft.changeEmailDone = false;
+        draft.changeEmailError = action.error;
+        break;
 
-    case CHANGE_PHONE_REQUEST:
-      return {
-        ...state,
-        changePhoneLoading: true,
-        changePhoneDone: false,
-        changePhoneError: false,
-      };
-    case CHANGE_PHONE_SUCCESS:
-      return {
-        ...state,
-        changePhoneLoading: false,
-        changePhoneDone: true,
-        changePhoneError: false,
-        clickChangePhone: false,
-        me: {
-          ...state.me,
-          phone: action.data,
-        },
-      };
-    case CHANGE_PHONE_FAILURE:
-      return {
-        ...state,
-        changePhoneLoading: false,
-        changePhoneDone: false,
-        changePhoneError: action.error,
-      };
+      case CHANGE_PHONE_REQUEST:
+        draft.changePhoneLoading = true;
+        draft.changePhoneDone = false;
+        draft.changePhoneError = false;
+        break;
+      case CHANGE_PHONE_SUCCESS:
+        draft.changePhoneLoading = false;
+        draft.changePhoneDone = true;
+        draft.changePhoneError = false;
+        draft.clickChangePhone = false;
+        draft.me.phone = action.data;
+        break;
+      case CHANGE_PHONE_FAILURE:
+        draft.changePhoneLoading = false;
+        draft.changePhoneDone = false;
+        draft.changePhoneError = action.error;
+        break;
 
-    default:
-      return state;
-  }
-};
+      default:
+        break;
+    }
+  });
 
 export default user;

@@ -10,6 +10,7 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import {
   EDIT_CATEGORY_REQUEST,
   ADD_CATEGORY_REQUEST,
+  REMOVE_CATEGORY_REQUEST,
 } from '../reducers/content';
 
 const useStyles = makeStyles({
@@ -21,6 +22,7 @@ const useStyles = makeStyles({
 
 const EditCategory = () => {
   const { categoryLists } = useSelector((state) => state.content);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [value, setValue] = useState('');
   const [id, setId] = useState('');
@@ -48,7 +50,6 @@ const EditCategory = () => {
     }
     setValue(e.target.innerText);
     setId(v);
-    console.log(v);
   }, []);
 
   const addCategory = useCallback(() => {
@@ -58,40 +59,61 @@ const EditCategory = () => {
     });
   }, [id]);
 
+  const removeCategory = useCallback(() => {
+    dispatch({
+      type: REMOVE_CATEGORY_REQUEST,
+      data: id,
+    });
+  }, [id]);
+
   return (
     <Applayout>
-      <Row style={{ marginTop: '200px' }}>
-        <Col span={4}>
-          <div>카테고리</div>
-          <TreeView
-            className={classes.root}
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-            onNodeSelect={handleOnSelected}
-          >
-            <TreeItem nodeId="whole" label="카테고리 전체보기" key="whole" />
-            {categoryLists.map((v) => (
-              <TreeItem nodeId={v.key} label={v.title} key={v.key}>
-                {v.children.map((v) => (
-                  <TreeItem nodeId={v.key} label={v.title} key={v.key} />
-                ))}
-              </TreeItem>
-            ))}
-          </TreeView>
-          <Button onClick={addCategory}>추가</Button>
-        </Col>
-        <Col span={20}>
-          <Form style={{ width: '20%' }} onFinish={handleOnSubmit}>
-            <Input value={value} onChange={handleOnChange} />
-            <Button
-              style={{ display: 'block', float: 'right' }}
-              htmlType="submit"
+      {me ? (
+        <Row style={{ marginTop: '200px' }}>
+          <Col span={4}>
+            <div>카테고리</div>
+            <TreeView
+              className={classes.root}
+              defaultCollapseIcon={<ExpandMoreIcon />}
+              defaultExpandIcon={<ChevronRightIcon />}
+              onNodeSelect={handleOnSelected}
             >
-              변경
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+              <TreeItem nodeId="whole" label="카테고리 전체보기" key="whole" />
+              {categoryLists.map((v) => (
+                <TreeItem nodeId={v.key} label={v.title} key={v.key}>
+                  {v.children.map((v) => (
+                    <TreeItem nodeId={v.key} label={v.title} key={v.key} />
+                  ))}
+                </TreeItem>
+              ))}
+            </TreeView>
+            <Button onClick={addCategory}>추가</Button>
+            <Button onClick={removeCategory}>삭제</Button>
+          </Col>
+          <Col span={20}>
+            <Form style={{ width: '20%' }} onFinish={handleOnSubmit}>
+              <Input value={value} onChange={handleOnChange} />
+              <Button
+                style={{ display: 'block', float: 'right' }}
+                htmlType="submit"
+              >
+                변경
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      ) : (
+        <div
+          style={{
+            minHeight: 'calc(100vh - 48.44px)',
+            textAlign: 'center',
+            lineHeight: 'calc(100vh - 48.44px)',
+            fontSize: '30px',
+          }}
+        >
+          로그인을 해주세요.
+        </div>
+      )}
     </Applayout>
   );
 };

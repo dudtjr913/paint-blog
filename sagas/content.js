@@ -13,6 +13,9 @@ import {
   EDIT_CATEGORY_REQUEST,
   EDIT_CATEGORY_FAILURE,
   EDIT_CATEGORY_SUCCESS,
+  ADD_CATEGORY_REQUEST,
+  ADD_CATEGORY_FAILURE,
+  ADD_CATEGORY_SUCCESS,
 } from '../reducers/content';
 // import axios from "axios"
 
@@ -96,6 +99,26 @@ function* editCategory(action) {
   }
 }
 
+/*function addCategoryData(data){
+    axios.patch('/category', data)
+}*/
+
+function* addCategory(action) {
+  try {
+    yield delay(1000);
+    //yield call(addCategoryData, action.data);
+    yield put({
+      type: ADD_CATEGORY_SUCCESS,
+      data: action.data,
+    });
+  } catch (error) {
+    yield put({
+      type: ADD_CATEGORY_FAILURE,
+      error,
+    });
+  }
+}
+
 function* watchMoreContents() {
   yield takeLatest(MORE_CONTENTS_REQUEST, moreContents);
 }
@@ -112,11 +135,16 @@ function* watchEditCategory() {
   yield takeLatest(EDIT_CATEGORY_REQUEST, editCategory);
 }
 
+function* watchAddCategory() {
+  yield takeLatest(ADD_CATEGORY_REQUEST, addCategory);
+}
+
 export default function* contentSaga() {
   yield all([
     fork(watchMoreContents),
     fork(watchLoadContent),
     fork(watchAddContent),
     fork(watchEditCategory),
+    fork(watchAddCategory),
   ]);
 }

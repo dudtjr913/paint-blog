@@ -3,7 +3,7 @@ import shortId from 'shortid';
 
 const initialState = {
   contents: [],
-  menuLists: [
+  categoryLists: [
     {
       title: 'items1',
       key: 'items1',
@@ -44,6 +44,9 @@ const initialState = {
   editCategoryLoading: false,
   editCategoryDone: false,
   editCategoryError: false,
+  addCategoryLoading: false,
+  addCategoryDone: false,
+  addCategoryError: false,
   addContentLoading: false,
   addContentDone: false,
   addContentError: false,
@@ -71,6 +74,10 @@ export const MORE_CONTENTS_FAILURE = 'MORE_CONTENTS_FAILURE';
 export const EDIT_CATEGORY_REQUEST = 'EDIT_CATEGORY_REQUEST';
 export const EDIT_CATEGORY_SUCCESS = 'EDIT_CATEGORY_SUCCESS';
 export const EDIT_CATEGORY_FAILURE = 'EDIT_CATEGORY_FAILURE';
+
+export const ADD_CATEGORY_REQUEST = 'ADD_CATEGORY_REQUEST';
+export const ADD_CATEGORY_SUCCESS = 'ADD_CATEGORY_SUCCESS';
+export const ADD_CATEGORY_FAILURE = 'ADD_CATEGORY_FAILURE';
 
 export const dummy = (number) => {
   const dummyData = [];
@@ -101,33 +108,80 @@ const content = (state = initialState, action) => {
         editCategoryDone: false,
         editCategoryError: false,
       };
-    case EDIT_CATEGORY_SUCCESS:
-      const copy = JSON.parse(JSON.stringify(state.menuLists)); // 깊은 복사
-      let category = action.data.select.children
-        ? copy.find((v) => v.title === action.data.select.title)
-        : copy.findIndex((v) =>
-            v.children.find((v) => v.title === action.data.select.title)
-          );
-      category =
-        typeof category === 'number' // 자식이 있으면 부모 인덱스를 통해 자식 값을 가져옴
-          ? copy[category].children.find(
-              (v) => v.title === action.data.select.title
-            )
-          : category;
-      category.title = action.data.value;
+    case EDIT_CATEGORY_SUCCESS: {
+      const copyCategory = JSON.parse(JSON.stringify(state.categoryLists));
+      let findCategory = copyCategory.find((v) => v.key === action.data.id);
+      if (!findCategory) {
+        findCategory = copyCategory.map((v) =>
+          v.children.find((v) => v.key === action.data.id)
+        );
+        findCategory = findCategory.filter((v) => v !== undefined)[0];
+      }
+      console.log(findCategory);
+      findCategory.title = action.data.value;
       return {
         ...state,
         editCategoryLoading: false,
         editCategoryDone: true,
         editCategoryError: false,
-        menuLists: [...copy],
+        categoryLists: [...copyCategory],
       };
+    }
     case EDIT_CATEGORY_FAILURE:
       return {
         ...state,
         editCategoryLoading: false,
         editCategoryDone: false,
         editCategoryError: action.error,
+      };
+    case ADD_CATEGORY_REQUEST:
+      return {
+        ...state,
+        addCategoryLoading: true,
+        addCategoryDone: false,
+        addCategoryError: false,
+      };
+    case ADD_CATEGORY_SUCCESS: {
+      const copyCategory = JSON.parse(JSON.stringify(state.categoryLists));
+      if (!action.data) {
+        copyCategory.push({
+          title: '게시판',
+          key: shortId.generate(),
+          children: [],
+        });
+      }
+      if (action.data) {
+        const findCategoryIndex = copyCategory.findIndex(
+          (v) => v.key === action.data
+        );
+        if (!findCategoryIndex) {
+          if (
+            copyCategory.map((v) =>
+              v.children.find((v) => v.key === action.data)
+            )[0]
+          ) {
+            alert('카테고리는 2차 분류까지 만들 수 있습니다.');
+          }
+        }
+        copyCategory[findCategoryIndex].children.push({
+          title: '게시판',
+          key: shortId.generate(),
+        });
+      }
+      return {
+        ...state,
+        addCategoryLoading: false,
+        addCategoryDone: true,
+        addCategoryError: false,
+        categoryLists: [...copyCategory],
+      };
+    }
+    case ADD_CATEGORY_FAILURE:
+      return {
+        ...state,
+        addCategoryLoading: false,
+        addCategoryDone: false,
+        addCategoryError: action.error,
       };
     case ADD_CONTENT_REQUEST:
       return {

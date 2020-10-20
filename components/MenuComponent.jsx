@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const MenuComponent = () => {
   const [menu, setMenu] = useState(false);
-  const { menuLists } = useSelector((state) => state.content);
+  const { categoryLists } = useSelector((state) => state.content);
   const handleOnClick = useCallback(() => {
     setMenu((prev) => !prev);
   }, []);
@@ -38,7 +38,7 @@ const MenuComponent = () => {
           onClick={handleOnMenuClick}
           mode="inline"
         >
-          {menuLists.map((v) => (
+          {categoryLists.map((v) => (
             <Menu.ItemGroup key={v.key} title={v.title}>
               {v.children.map((v) => (
                 <Menu.Item key={v.key}>{v.title}</Menu.Item>
@@ -48,7 +48,7 @@ const MenuComponent = () => {
         </Menu>
       )}
       <Button>
-        <Link to="/editmenu">edit</Link>
+        <Link to="/editcategory">edit</Link>
       </Button>
     </>
   );
